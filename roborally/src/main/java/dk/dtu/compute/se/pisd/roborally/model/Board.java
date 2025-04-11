@@ -57,6 +57,8 @@ public class Board extends Subject {
 
     private int step = 0;
 
+    private int counter = 0;
+
     private boolean stepMode;
 
     public Board(int width, int height, @NotNull String boardName) {
@@ -182,11 +184,11 @@ public class Board extends Subject {
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
-        // TODO A3: This implementation needs to be adjusted so that walls on
-        //          spaces (and maybe other obstacles) are taken into account
-        //          (see above JavaDoc comment for this method).
         int x = space.x;
         int y = space.y;
+
+        if (space.getWalls().contains(heading)) {return null;}  //Checks whether current space has wall
+
         switch (heading) {
             case SOUTH:
                 y = (y + 1) % height;
@@ -202,17 +204,37 @@ public class Board extends Subject {
                 break;
         }
 
-        return getSpace(x, y);
+        Space newSpace = getSpace(x,y);
+
+        if (newSpace.getWalls().contains(heading.next().next())) {return null;}     //Checks whether next space has wall
+
+        return newSpace;
+    }
+    public int getCounter() {
+        return counter;
     }
 
+    public void setCounter(int counter) {
+        if (counter != this.counter) {
+            this.counter = counter;
+            notifyChange();
+        }
+    }
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current
         // status of the game
 
-        // TODO V1: add the move count to the status message
-        // TODO V2: changed the status so that it shows the phase, the current player, and the current register
-        return "Player = " + getCurrentPlayer().getName();
+        return "Player = " + getCurrentPlayer().getName() + "\nMove count = " + getCounter();
+    }
+    private Player winner;
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+    }
+
+    public Player getWinner() {
+        return winner;
     }
 
 }
