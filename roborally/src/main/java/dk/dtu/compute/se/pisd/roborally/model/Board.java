@@ -57,6 +57,8 @@ public class Board extends Subject {
 
     private int step = 0;
 
+    private int counter = 0;
+
     private boolean stepMode;
 
     public Board(int width, int height, @NotNull String boardName) {
@@ -208,7 +210,16 @@ public class Board extends Subject {
 
         return newSpace;
     }
+    public int getCounter() {
+        return counter;
+    }
 
+    public void setCounter(int counter) {
+        if (counter != this.counter) {
+            this.counter = counter;
+            notifyChange();
+        }
+    }
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current
