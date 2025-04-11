@@ -220,6 +220,17 @@ public class GameController {
 
     }
 
+    public void moveToSpace(@NotNull Player player, Space space, Heading heading) throws ImpossibleMoveException{
+        if (space == null) {return;}    //for walls
+        if (space.getPlayer() != null) {
+            Space newSpace  = board.getNeighbour(space, heading);
+            if (newSpace != null) {
+                moveToSpace(space.getPlayer(), newSpace, heading);
+            } else { throw new ImpossibleMoveException("Invalid move by: ",player); }
+        }
+        player.setSpace(space);
+    }
+
     /**
      * A method called when no corresponding controller operation is implemented yet.
      * This should eventually be removed.
@@ -227,6 +238,16 @@ public class GameController {
     public void notImplemented() {
         // XXX just for now to indicate that the actual method is not yet implemented
         assert false;
+    }
+
+    public static class ImpossibleMoveException extends ReflectiveOperationException {
+
+        final public Player player;
+
+        public ImpossibleMoveException(String message, Player player) {
+            super(message);
+            this.player = player;
+        }
     }
 
 }
