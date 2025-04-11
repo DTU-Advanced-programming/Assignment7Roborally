@@ -45,14 +45,14 @@ public class GameController {
      * @param space the space to which the current player should move
      */
     public void moveCurrentPlayerToSpace(@NotNull Space space)  {
-        // TODO V1: method should be implemented by the students:
-        //   - the current player should be moved to the given space
-        //     (if it is free())
-        //   - and the current player should be set to the player
-        //     following the current player
-        //   - the counter of moves in the game should be increased by one
-        //     if and when the player is moved (the counter and the status line
-        //     message needs to be implemented at another place)
+        if (space.getPlayer() != null) {
+            // if no other player is present here, ignoring walls and other things
+            return;
+        }
+        Player curr = board.getCurrentPlayer();
+        curr.setSpace(space);
+        board.setCurrentPlayer(board.getPlayer((board.getPlayerNumber(curr)+1)% board.getPlayersNumber()));
+        board.setCounter(board.getCounter()+1);
 
     }
 
@@ -196,23 +196,27 @@ public class GameController {
         }
     }
 
-    // TODO V2
     public void moveForward(@NotNull Player player) {
-
+        Space newSpace = board.getNeighbour(player.getSpace(),player.getHeading());
+        try {
+            moveToSpace(player, newSpace, player.getHeading());
+        } catch (ImpossibleMoveException e) {
+            // when pushing not possible due to wall
+            System.out.println(e.getMessage() + e.player + "to move fwd");
+        }
     }
 
-    // TODO V2
     public void fastForward(@NotNull Player player) {
-
+        moveForward(player);
+        moveForward(player);
     }
 
-    // TODO V2
     public void turnRight(@NotNull Player player) {
-
+        player.setHeading(player.getHeading().next());
     }
 
-    // TODO V2
     public void turnLeft(@NotNull Player player) {
+        player.setHeading(player.getHeading().prev());
 
     }
 
