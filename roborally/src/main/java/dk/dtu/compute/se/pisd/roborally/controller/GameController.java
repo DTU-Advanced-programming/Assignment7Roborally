@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -249,5 +250,67 @@ public class GameController {
             this.player = player;
         }
     }
+
+    /**
+     * Rotates the player 180 degrees, effectively reversing their heading.
+     * @param player The player to rotate. Must not be {@code null}.
+     * @see Player
+     * @see Heading#next()
+     */
+    public void uTurn(@NotNull Player player) {
+        player.setHeading(player.getHeading().next().next());
+    }
+
+    public void l_button(@NotNull Player player) {
+        turnLeft(player);
+        board.setPhase(Phase.INTERACTED);
+        continuePrograms();
+    }
+
+    public void r_button(@NotNull Player player) {
+        turnRight(player);
+        board.setPhase(Phase.INTERACTED);
+        continuePrograms();
+    }
+
+    /**
+     * Moves a command card from one field to another. This method is used during the programming
+     * phase to allow players to rearrange their command cards.
+     *
+     * @param source The source field from which to move the card.
+     * @param target The target field to which to move the card.
+     * @return true if the card was successfully moved, false otherwise.
+     */
+//    public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
+//        CommandCard sourceCard = source.getCard();
+//        CommandCard targetCard = target.getCard();
+//        if (sourceCard != null && targetCard == null) {
+//            target.setCard(sourceCard);
+//            source.setCard(null);
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+    /**
+     * A custom exception class for handling invalid player movements. This exception is thrown
+     * when a player attempts to move to a space that is blocked by a wall or another player.
+     */
+
+    private void showGameOver(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Game Over! Thanks for playing.");
+        alert.setTitle("End Screen");
+        alert.setHeaderText(board.getWinner().getColor().toUpperCase() + " Player wins");
+        alert.show();
+    }
+
+    /**
+     * A method called when no corresponding controller operation is implemented yet.
+     * This should eventually be removed.
+     */
+//    public void notImplemented() {
+//        // XXX just for now to indicate that the actual method is not yet implemented
+//        assert false;
+//    }
 
 }
